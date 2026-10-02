@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f5ef">
+  <title>Sekta · Сильные ягодицы — зелёная консоль</title>
+  <style>
+    :root {
+      --ground: #f2f5ef;
+      --paper: #fbfcf9;
+      --panel: #eef2ec;
+      --ink: #151817;
+      --muted: #69706b;
+      --line: #cdd4cc;
+      --line-dark: #aeb8af;
+      --forest: #173b2a;
+      --forest-2: #0e2b1d;
+      --forest-soft: #e1eee5;
+      --lime: #dff457;
+      --lime-2: #cbe83e;
+      --orange: #f25724;
+      --orange-soft: #fff0e9;
+      --danger: #a3352c;
+      --success: #23704d;
+      --r-sm: 6px;
+      --r-md: 9px;
+      --r-lg: 12px;
+      --rail: 218px;
+      --max: 1240px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--ground);
+      color: var(--ink);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      line-height: 1.42;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    button { color: inherit; -webkit-tap-highlight-color: transparent; }
+    ::selection { background: var(--lime); color: var(--ink); }
+    :focus-visible { outline: 3px solid rgba(242, 87, 36, .3); outline-offset: 3px; }
+    .icon { width: 19px; height: 19px; display: block; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .app { min-height: 100vh; }
+
+    .side-rail {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 20;
+      width: var(--rail);
+      display: flex;
+      flex-direction: column;
+      padding: 22px 16px;
+      border-right: 1px solid var(--line);
+      background: var(--paper);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; margin: 0 8px 32px; font-size: 15px; font-weight: 850; letter-spacing: -.02em; }
+    .brand-mark { width: 34px; height: 34px; display: grid; place-items: center; border-radius: var(--r-md); background: var(--forest); color: var(--lime); }
+    .nav { display: grid; gap: 5px; }
+    .nav button { min-height: 44px; display: flex; align-items: center; gap: 11px; width: 100%; padding: 0 12px; border: 0; border-radius: var(--r-md); background: transparent; color: var(--muted); text-align: left; font-size: 13px; font-weight: 740; cursor: pointer; }
+    .nav button:hover { background: var(--panel); color: var(--ink); }
+    .nav button[aria-current="page"] { background: var(--forest); color: #fff; }
+    .nav button[aria-current="page"] .nav-state { background: var(--lime); }
+    .nav-state { width: 6px; height: 6px; margin-left: auto; border-radius: 50%; background: transparent; }
+    .rail-foot { margin-top: auto; padding: 16px 10px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    .rail-foot strong { display: block; margin-bottom: 4px; color: var(--ink); font-size: 13px; }
+
+    .page { margin-left: var(--rail); min-height: 100vh; }
+    .topbar { height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 28px; border-bottom: 1px solid var(--line); background: rgba(251,252,249,.94); position: sticky; top: 0; z-index: 15; }
+    .topbar strong { display: block; font-size: 13px; }
+    .topbar span { color: var(--muted); font-size: 11px; }
+    .top-actions { display: flex; align-items: center; gap: 10px; }
+    .sync-state { min-height: 32px; display: inline-flex; align-items: center; gap: 7px; padding: 0 10px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper); color: var(--muted); font-size: 11px; font-weight: 740; }
+    .sync-state i { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+    .avatar { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: var(--forest); color: #fff; font-size: 11px; font-weight: 820; }
+
+    .workspace { width: min(calc(100% - 56px), var(--max)); margin: 0 auto; padding: 32px 0 70px; }
+    .workout-head { display: flex; align-items: end; justify-content: space-between; gap: 22px; margin-bottom: 22px; }
+    .workout-head h1 { margin: 0 0 6px; font-size: 36px; line-height: 1; letter-spacing: -.035em; }
+    .workout-head p { margin: 0; color: var(--muted); font-size: 13px; }
+    .head-measure { min-width: 170px; display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid var(--line); background: var(--paper); }
+    .head-measure div { padding: 10px 12px; border-right: 1px solid var(--line); }
+    .head-measure div:last-child { border-right: 0; }
+    .head-measure strong { display: block; font-size: 16px; font-variant-numeric: tabular-nums; }
+    .head-measure span { color: var(--muted); font-size: 11px; }
+
+    .route { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin-bottom: 14px; border: 1px solid var(--line); background: var(--paper); }
+    .route-step { position: relative; min-height: 88px; display: grid; grid-template-columns: 38px minmax(0,1fr); align-items: center; gap: 9px; padding: 12px; border: 0; border-right: 1px solid var(--line); background: transparent; text-align: left; cursor: pointer; }
+    .route-step:last-child { border-right: 0; }
+    .route-step:hover:not(:disabled) { background: var(--panel); }
+    .route-step:disabled { cursor: default; opacity: .46; }
+    .route-step[aria-current="step"] { background: var(--forest); color: #fff; }
+    .route-step[aria-current="step"]::after { content: ""; position: absolute; inset: auto 0 0; height: 5px; background: var(--lime); }
+    .route-step[data-complete="true"] { background: var(--forest-soft); color: var(--forest); }
+    .route-num { font-size: 25px; line-height: 1; font-weight: 840; font-variant-numeric: tabular-nums; }
+    .route-copy { min-width: 0; }
+    .route-copy strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+    .route-copy span { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; }
+    .route-step[aria-current="step"] .route-copy span { color: #c9d8ce; }
+
+    .main-grid { display: grid; grid-template-columns: minmax(0, 1.48fr) minmax(330px, .72fr); gap: 14px; align-items: start; }
+    .technique { min-width: 0; }
+    .media { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: var(--r-lg) var(--r-lg) 0 0; background: #e3e6e1; }
+    .media img { width: 100%; aspect-ratio: 16 / 8.8; display: block; object-fit: contain; background: #eeeae4; }
+    .media[data-mode="video"] { aspect-ratio: 16 / 9; background: #000; }
+    .media[data-mode="video"] img { display: none; }
+    .media[data-mode="video"] .media-status,
+    .media[data-mode="video"] .video-button { display: none !important; }
+    .media-status { position: absolute; top: 14px; left: 14px; min-height: 34px; display: inline-flex; align-items: center; gap: 8px; padding: 0 11px; border-radius: var(--r-md); background: var(--forest); color: #fff; font-size: 11px; font-weight: 780; }
+    .media-status i { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); }
+    .video-button { position: absolute; right: 14px; bottom: 14px; min-height: 40px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,.4); border-radius: var(--r-md); padding: 0 12px; background: rgba(14,43,29,.92); color: #fff; font-size: 11px; font-weight: 760; cursor: pointer; }
+    .video-button:hover { background: var(--forest-2); }
+    .media iframe { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; border: 0; background: #000; }
+    .cues { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); border: 1px solid var(--line); border-top: 0; background: var(--paper); }
+    .cue { min-height: 96px; padding: 15px; border-right: 1px solid var(--line); }
+    .cue:last-child { border-right: 0; }
+    .cue strong { display: block; margin-bottom: 7px; color: var(--forest); font-size: 11px; }
+    .cue p { margin: 0; font-size: 12px; }
+    .cue--warning { background: var(--orange-soft); }
+    .cue--warning strong { color: var(--orange); }
+
+    .console { border: 1px solid var(--line); background: var(--paper); }
+    .console-head { min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 16px; border-bottom: 1px solid var(--line); }
+    .console-head strong { font-size: 14px; }
+    .console-head span { color: var(--muted); font-size: 11px; }
+    .set-tabs { display: grid; grid-template-columns: repeat(3,1fr); border-bottom: 1px solid var(--line); }
+    .set-tab { min-height: 52px; border: 0; border-right: 1px solid var(--line); background: transparent; color: var(--muted); font-size: 13px; font-weight: 820; cursor: pointer; }
+    .set-tab:last-child { border-right: 0; }
+    .set-tab:hover { background: var(--panel); color: var(--ink); }
+    .set-tab[aria-current="true"] { background: var(--forest); color: #fff; }
+    .set-tab[data-done="true"] { background: var(--forest-soft); color: var(--forest); }
+    .weight-block { padding: 16px; border-bottom: 1px solid var(--line); }
+    .measure-label { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 11px; font-weight: 760; }
+    .weight-row { display: grid; grid-template-columns: 42px minmax(0,1fr) 42px; align-items: center; gap: 8px; margin: 10px 0 13px; }
+    .step-button { min-height: 44px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--paper); font-size: 20px; cursor: pointer; }
+    .step-button:hover { border-color: var(--line-dark); background: var(--panel); }
+    .weight-field { display: flex; align-items: baseline; justify-content: center; gap: 7px; }
+    .weight-field input { width: 112px; border: 0; background: transparent; color: var(--orange); text-align: right; font-size: 48px; line-height: 1; font-weight: 760; font-variant-numeric: tabular-nums; outline: 0; }
+    .weight-field span { color: var(--orange); font-size: 12px; font-weight: 780; }
+    .ruler { position: relative; height: 30px; display: flex; align-items: end; justify-content: space-between; padding: 0 6px; color: var(--muted); font-size: 9px; }
+    .ruler::before { content: ""; position: absolute; left: 6px; right: 6px; bottom: 12px; height: 2px; background: var(--line-dark); }
+    .ruler::after { content: ""; position: absolute; left: 55%; bottom: 7px; width: 3px; height: 18px; background: var(--orange); }
+    .ruler span { position: relative; z-index: 1; background: var(--paper); padding: 0 2px; }
+    .metric-grid { display: grid; grid-template-columns: repeat(3,1fr); border-bottom: 1px solid var(--line); }
+    .metric { min-height: 92px; display: grid; align-content: center; justify-items: center; border-right: 1px solid var(--line); }
+    .metric:last-child { border-right: 0; }
+    .metric span { color: var(--muted); font-size: 11px; font-weight: 760; }
+    .metric-control { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+    .metric-control button { width: 28px; height: 28px; border: 1px solid var(--line); border-radius: var(--r-sm); background: transparent; cursor: pointer; }
+    .metric-control strong { min-width: 34px; text-align: center; font-size: 24px; font-variant-numeric: tabular-nums; }
+    .metric--rest strong { color: var(--forest); }
+    .primary { min-height: 56px; width: calc(100% - 24px); display: flex; align-items: center; justify-content: center; gap: 10px; margin: 12px; border: 0; border-radius: var(--r-md); background: var(--lime); color: var(--ink); font-weight: 850; cursor: pointer; transition: background .18s ease, transform .18s cubic-bezier(.2,.8,.2,1); }
+    .primary:hover { background: var(--lime-2); transform: translateY(-1px); }
+    .primary:active { transform: scale(.99); }
+    .primary[disabled] { opacity: .46; cursor: default; transform: none; }
+    .rest-dock { display: none; margin: 0 12px 12px; padding: 14px; border-radius: var(--r-md); background: var(--forest); color: #fff; }
+    .rest-dock[data-open="true"] { display: block; animation: dockIn .22s cubic-bezier(.16,1,.3,1); }
+    @keyframes dockIn { from { opacity: 0; clip-path: inset(0 0 100% 0 round 9px); } to { opacity: 1; clip-path: inset(0 round 9px); } }
+    .rest-top { display: flex; justify-content: space-between; gap: 10px; color: #c5d4ca; font-size: 11px; }
+    .rest-time { margin: 9px 0; font-size: 34px; font-weight: 820; font-variant-numeric: tabular-nums; }
+    .rest-track { height: 5px; background: #365445; overflow: hidden; }
+    .rest-track i { display: block; width: 100%; height: 100%; background: var(--lime); transform-origin: left; }
+    .rest-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 11px; }
+    .rest-actions button { min-height: 38px; border: 0; border-radius: var(--r-sm); background: #31503f; color: #fff; font-size: 10px; font-weight: 760; cursor: pointer; }
+    .rest-actions button:last-child { background: var(--lime); color: var(--ink); }
+    .safety { width: 100%; min-height: 43px; border: 0; border-top: 1px solid var(--line); background: transparent; color: var(--danger); font-size: 11px; font-weight: 760; cursor: pointer; }
+    .safety-copy { display: none; margin: 0 12px 12px; padding: 12px; background: var(--orange-soft); color: #692318; font-size: 12px; }
+    .safety-copy[data-open="true"] { display: block; }
+
+    .view[hidden] { display: none !important; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+    .section-head h1 { margin: 0 0 7px; font-size: 36px; line-height: 1; letter-spacing: -.035em; }
+    .section-head p { max-width: 650px; margin: 0; color: var(--muted); font-size: 13px; }
+    .section-link { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 14px; border: 1px solid var(--forest); border-radius: var(--r-md); background: var(--forest); color: #fff; text-decoration: none; font-size: 11px; font-weight: 800; white-space: nowrap; }
+    .section-link:hover { background: var(--forest-2); }
+    .section-link--quiet { border-color: var(--line); background: var(--paper); color: var(--forest); }
+    .section-link--quiet:hover { border-color: var(--forest); background: var(--forest-soft); }
+    .section-panel { border: 1px solid var(--line); background: var(--paper); }
+    .section-panel + .section-panel { margin-top: 14px; }
+    .panel-title { min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 0 17px; border-bottom: 1px solid var(--line); }
+    .panel-title strong { font-size: 14px; }
+    .panel-title span { color: var(--muted); font-size: 11px; }
+    .program-timeline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .program-week { min-height: 190px; padding: 18px; border-right: 1px solid var(--line); }
+    .program-week:last-child { border-right: 0; }
+    .program-week[data-current="true"] { background: var(--forest-soft); }
+    .program-week small { display: block; margin-bottom: 18px; color: var(--muted); font-size: 10px; font-weight: 820; letter-spacing: .08em; }
+    .program-week[data-current="true"] small { color: var(--forest); }
+    .program-week strong { display: block; margin-bottom: 9px; font-size: 16px; }
+    .program-week p { margin: 0; color: var(--muted); font-size: 12px; }
+    .program-week a { display: inline-flex; margin-top: 17px; color: var(--forest); font-size: 11px; font-weight: 800; }
+    .workout-library-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .workout-library-item { min-height: 178px; display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 16px; padding: 20px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: inherit; text-decoration: none; }
+    .workout-library-item:nth-child(2n) { border-right: 0; }
+    .workout-library-item:nth-last-child(-n+2) { border-bottom: 0; }
+    .workout-library-item:hover { background: var(--panel); }
+    .workout-index { width: 58px; height: 58px; display: grid; place-items: center; border-radius: var(--r-md); background: var(--forest); color: var(--lime); font-size: 20px; font-weight: 850; font-variant-numeric: tabular-nums; }
+    .workout-library-item h2 { margin: 1px 0 7px; font-size: 18px; line-height: 1.1; }
+    .workout-library-item p { margin: 0 0 15px; color: var(--muted); font-size: 12px; }
+    .workout-meta { display: flex; flex-wrap: wrap; gap: 7px; }
+    .workout-meta span { padding: 5px 7px; border: 1px solid var(--line); border-radius: var(--r-sm); color: var(--muted); font-size: 11px; font-weight: 760; }
+    .progress-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .progress-summary article { min-height: 138px; display: grid; align-content: center; padding: 20px; border-right: 1px solid var(--line); }
+    .progress-summary article:last-child { border-right: 0; }
+    .progress-summary strong { display: block; color: var(--forest); font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .progress-summary span { display: block; margin-top: 8px; color: var(--muted); font-size: 11px; }
+    .progress-detail { display: grid; grid-template-columns: 1fr 1fr; }
+    .progress-detail > div { padding: 18px; border-right: 1px solid var(--line); }
+    .progress-detail > div:last-child { border-right: 0; }
+    .progress-detail strong { display: block; margin-bottom: 6px; font-size: 13px; }
+    .progress-detail p { margin: 0; color: var(--muted); font-size: 12px; }
+    .weight-history { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    .weight-history span { padding: 6px 8px; border-radius: var(--r-sm); background: var(--forest-soft); color: var(--forest); font-size: 11px; font-weight: 780; }
+
+    .finish { position: fixed; inset: 0; z-index: 100; display: none; place-items: center; padding: 24px; background: var(--forest-2); color: #fff; }
+    .finish[data-open="true"] { display: grid; }
+    .finish-card { width: min(100%, 560px); text-align: center; }
+    .finish-mark { width: 72px; height: 72px; display: grid; place-items: center; margin: 0 auto 24px; border-radius: var(--r-lg); background: var(--lime); color: var(--ink); }
+    .finish h2 { margin: 0 0 10px; font-size: 42px; line-height: 1; letter-spacing: -.035em; }
+    .finish p { margin: 0 auto; max-width: 480px; color: #c6d2ca; }
+    .finish-stats { display: grid; grid-template-columns: repeat(3,1fr); margin: 28px 0; border: 1px solid #3a5647; }
+    .finish-stats div { padding: 15px; border-right: 1px solid #3a5647; }
+    .finish-stats div:last-child { border-right: 0; }
+    .finish-stats strong { display: block; font-size: 21px; }
+    .finish-stats span { color: #aebfb4; font-size: 10px; }
+    .finish .primary { width: 230px; margin: 0 auto; }
+
+    .mobile-nav { display: none; }
+    @media (max-width: 1040px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .console { display: grid; grid-template-columns: 1fr 1fr; }
+      .console-head, .set-tabs { grid-column: 1 / -1; }
+      .weight-block { border-right: 1px solid var(--line); }
+      .metric-grid { border-bottom: 0; }
+      .primary, .rest-dock, .safety, .safety-copy { grid-column: 1 / -1; }
+      .program-timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .program-week:nth-child(2) { border-right: 0; }
+      .program-week:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+    }
+    @media (max-width: 760px) {
+      body { padding-bottom: 68px; }
+      .side-rail { display: none; }
+      .page { margin-left: 0; }
+      .topbar { height: 60px; padding: 0 15px; }
+      .sync-state { display: none; }
+      .workspace { width: min(calc(100% - 24px), 620px); padding: 22px 0 44px; }
+      .workout-head { align-items: start; flex-direction: column; margin-bottom: 16px; }
+      .workout-head h1 { font-size: 30px; }
+      .section-head { align-items: stretch; flex-direction: column; margin-bottom: 16px; }
+      .section-head h1 { font-size: 30px; }
+      .section-link { width: 100%; }
+      .head-measure { width: 100%; }
+      .route { overflow-x: auto; grid-template-columns: repeat(5, minmax(148px,1fr)); scrollbar-width: none; scroll-snap-type: x proximity; }
+      .route::-webkit-scrollbar { display: none; }
+      .route-step { min-height: 82px; grid-template-columns: 24px minmax(0,1fr); align-items: start; padding: 13px 11px 11px; scroll-snap-align: start; }
+      .route-num { font-size: 21px; }
+      .route-copy strong { min-height: 28px; overflow: visible; text-overflow: clip; white-space: normal; line-height: 1.25; }
+      .route-copy span { margin-top: 3px; }
+      .media img { aspect-ratio: 2 / 1; }
+      .cues { grid-template-columns: 1fr; }
+      .cue { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
+      .cue:last-child { border-bottom: 0; }
+      .console { display: block; margin-top: 12px; }
+      .weight-block { border-right: 0; }
+      .mobile-nav { position: fixed; inset: auto 0 0; z-index: 50; height: 64px; display: grid; grid-template-columns: repeat(4,1fr); border-top: 1px solid var(--line); background: rgba(251,252,249,.96); }
+      .mobile-nav button { display: grid; place-items: center; align-content: center; gap: 3px; border: 0; background: transparent; color: var(--muted); font-size: 11px; font-weight: 740; }
+      .mobile-nav button[aria-current="page"] { color: var(--forest); }
+      .mobile-nav button[aria-current="page"] .icon { color: var(--forest); }
+      .workout-library-grid, .progress-detail { grid-template-columns: 1fr; }
+      .workout-library-item { border-right: 0; }
+      .workout-library-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .workout-library-item:last-child { border-bottom: 0; }
+      .progress-detail > div { border-right: 0; border-bottom: 1px solid var(--line); }
+      .progress-detail > div:last-child { border-bottom: 0; }
+    }
+    @media (max-width: 430px) {
+      .workout-head h1 { font-size: 27px; }
+      .media-status { top: 10px; left: 10px; }
+      .video-button { right: 10px; bottom: 10px; }
+      .metric-grid { grid-template-columns: repeat(3,1fr); }
+      .metric-control { gap: 4px; }
+      .metric-control button { width: 25px; }
+      .metric-control strong { font-size: 21px; }
+      .finish-stats { grid-template-columns: 1fr; }
+      .finish-stats div { border-right: 0; border-bottom: 1px solid #3a5647; }
+      .finish-stats div:last-child { border-bottom: 0; }
+      .program-timeline, .progress-summary { grid-template-columns: 1fr; }
+      .program-week, .program-week:nth-child(2), .progress-summary article { border-right: 0; border-bottom: 1px solid var(--line); }
+      .program-week:last-child, .progress-summary article:last-child { border-bottom: 0; }
+      .workout-library-item { grid-template-columns: 46px minmax(0, 1fr); padding: 16px; }
+      .workout-index { width: 46px; height: 46px; font-size: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <!--
+  THESIS: A gym session behaves like calibrated equipment: every control has a measured value and one current state; the soft lifestyle card stack is refused.
+  OWN-WORLD: Cool aluminium-white fields, forest-green structural plates, acid-lime active marks, orange load values, crisp rules, and 6–12px corners.
+  STORY: The athlete reads the five-step route, checks technique, starts, records measured work, rests, and advances without leaving the console.
+  FIRST VIEWPORT: The complete exercise route leads, technique media owns the left field, and a single integrated measurement console owns the right with the primary action at its base.
+  FORM: Equipment calibration panel, grounded direction 3, seed d232ecb6; approved comp composition-b-green-v2.png.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+  -->
+  <div class="app">
+    <aside class="side-rail" aria-label="Основная навигация">
+      <div class="brand"><span class="brand-mark">S</span><span>Sekta · зал</span></div>
+      <nav class="nav">
+        <button type="button" data-view-nav="today" aria-current="page"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z"/><path d="M9 20v-6h6v6"/></svg>Сегодня<span class="nav-state"></span></button>
+        <button type="button" data-view-nav="program"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M7 4v6M17 4v6M5 12h14v8H5z"/></svg>Программа<span class="nav-state"></span></button>
+        <button type="button" data-view-nav="library"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5A1.5 1.5 0 0 1 6.5 4H11v16H6.5A1.5 1.5 0 0 1 5 18.5zM19 5.5A1.5 1.5 0 0 0 17.5 4H13v16h4.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg>Библиотека<span class="nav-state"></span></button>
+        <button type="button" data-view-nav="progress"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9m7 10V5m7 14v-7"/></svg>Прогресс<span class="nav-state"></span></button>
+      </nav>
+      <div class="rail-foot"><strong>Неделя 2 из 4</strong>Следующая тренировка — низ тела 360°</div>
+    </aside>
+
+    <main class="page">
+      <header class="topbar"><div><strong id="modeTitle">Тренировка на сегодня</strong><span id="topbarDate"></span></div><div class="top-actions"><span class="sync-state"><i></i><span id="saveState">готово к старту</span></span><span class="avatar">ОМ</span></div></header>
+      <section class="workspace view" data-view-panel="today">
+        <header class="workout-head"><div><h1>Сильные ягодицы</h1><p id="exerciseSubtitle">Главное силовое движение · большая ягодичная</p></div><div class="head-measure"><div><strong id="elapsed">00:00</strong><span>время</span></div><div><strong id="overallProgress">0 / 12</strong><span>подходы</span></div></div></header>
+        <section class="route" id="route" aria-label="Маршрут тренировки"></section>
+
+        <div class="main-grid">
+          <section class="technique" aria-labelledby="exerciseTitle">
+            <div class="media" id="media"><img id="exerciseImage" src="assets/hip-thrust.jpg" alt="Техника ягодичного моста: две фазы движения"><span class="media-status"><i></i><span id="exerciseTitle">Ягодичный мост</span></span><button class="video-button" id="videoButton" type="button"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5z"/></svg>Видео техники</button></div>
+            <div class="cues" id="cues"></div>
+          </section>
+
+          <aside class="console" aria-label="Панель тренировки">
+            <div class="console-head"><strong id="consoleTitle">Параметры упражнения</strong><span id="dose">3 подхода · 8–10 повторений</span></div>
+            <div class="set-tabs" id="setTabs"></div>
+            <div class="weight-block">
+              <div class="measure-label"><span>РАБОЧИЙ ВЕС</span><span id="lastWeight">прошлая запись: —</span></div>
+              <div class="weight-row"><button class="step-button" type="button" data-weight="-2.5" aria-label="Уменьшить вес">−</button><label class="weight-field"><input id="weight" type="number" min="0" max="500" step="0.5" value="40" aria-label="Рабочий вес"><span>кг</span></label><button class="step-button" type="button" data-weight="2.5" aria-label="Увеличить вес">+</button></div>
+              <div class="ruler" aria-hidden="true"><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span></div>
+            </div>
+            <div class="metric-grid">
+              <div class="metric"><span>ПОВТОРЕНИЯ</span><div class="metric-control"><button type="button" data-reps="-1" aria-label="Уменьшить повторения">−</button><strong id="reps">8</strong><button type="button" data-reps="1" aria-label="Увеличить повторения">+</button></div></div>
+              <div class="metric"><span>RIR</span><div class="metric-control"><button type="button" data-rir="-1" aria-label="Уменьшить RIR">−</button><strong id="rir">2</strong><button type="button" data-rir="1" aria-label="Увеличить RIR">+</button></div></div>
+              <div class="metric metric--rest"><span>ОТДЫХ</span><div class="metric-control"><strong id="restReadout">02:00</strong></div></div>
+            </div>
+            <button class="primary" type="button" id="primaryAction"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5z"/></svg><span>Начать тренировку</span></button>
+            <div class="rest-dock" id="restDock" data-open="false" aria-live="polite"><div class="rest-top"><span>ОТДЫХ ДО СЛЕДУЮЩЕГО ПОДХОДА</span><span id="restStatus">идёт</span></div><div class="rest-time" id="restTime">02:00</div><div class="rest-track"><i id="restBar"></i></div><div class="rest-actions"><button type="button" id="addRest">+ 15 секунд</button><button type="button" id="skipRest">Готова дальше</button></div></div>
+            <button class="safety" type="button" id="safetyButton">Мне больно или некомфортно</button>
+            <div class="safety-copy" id="safetyCopy" data-open="false">Остановите подход. При резкой боли, онемении, головокружении или потере контроля над весом тренировку не продолжайте.</div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="workspace view" data-view-panel="program" hidden>
+        <header class="section-head"><div><h1>Программа на 4 недели</h1><p>Три силовые тренировки в неделю с чередованием акцентов. Открывайте нужный день в полном курсе — там есть техника, веса, таймеры и все видео.</p></div><a class="section-link" href="course.html?program=calendar">Открыть календарь курса →</a></header>
+        <div class="section-panel">
+          <div class="panel-title"><strong>Маршрут программы</strong><span>неделя 2 из 4</span></div>
+          <div class="program-timeline">
+            <article class="program-week"><small>НЕДЕЛЯ 01</small><strong>Освоение техники</strong><p>Умеренные веса, запас 3 повтора, фиксация исходных рабочих весов.</p><a href="course.html?program=glutes">Начать с ягодиц →</a></article>
+            <article class="program-week" data-current="true"><small>НЕДЕЛЯ 02 · СЕЙЧАС</small><strong>Рабочий ритм</strong><p>Запас 2 повтора, стабильный темп и три полноценные тренировки.</p><a href="course.html?program=lower">Следующая: низ 360° →</a></article>
+            <article class="program-week"><small>НЕДЕЛЯ 03</small><strong>Прогресс нагрузки</strong><p>Добавьте вес или повтор, если техника остаётся устойчивой.</p><a href="course.html?program=legs">Открыть день ног →</a></article>
+            <article class="program-week"><small>НЕДЕЛЯ 04</small><strong>Закрепление</strong><p>Повторите лучшие рабочие веса без выхода за заданный RIR.</p><a href="course.html?program=calendar">Смотреть расписание →</a></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace view" data-view-panel="library" hidden>
+        <header class="section-head"><div><h1>Библиотека тренировок</h1><p>Все шесть тренировок курса снова доступны. В каждой — полный набор упражнений, подсказки по технике и встроенные видео.</p></div><a class="section-link" href="course.html?program=library">Открыть библиотеку упражнений →</a></header>
+        <div class="section-panel workout-library-grid">
+          <a class="workout-library-item" href="course.html?program=glutes"><span class="workout-index">01</span><span><h2>Сильные ягодицы</h2><p>Ягодичный мост, тяга, сплит-присед, разгибание бедра в блоке и отведение.</p><span class="workout-meta"><span>5 упражнений</span><span>≈ 60 мин</span></span></span></a>
+          <a class="workout-library-item" href="course.html?program=legs"><span class="workout-index">02</span><span><h2>День ног</h2><p>Квадрицепс, задняя поверхность бедра и икроножные.</p><span class="workout-meta"><span>5 упражнений</span><span>≈ 65 мин</span></span></span></a>
+          <a class="workout-library-item" href="course.html?program=lower"><span class="workout-index">03</span><span><h2>Низ 360°</h2><p>Комплексная работа на ягодицы, бёдра и приводящие мышцы.</p><span class="workout-meta"><span>5 упражнений</span><span>≈ 60 мин</span></span></span></a>
+          <a class="workout-library-item" href="course.html?program=upper"><span class="workout-index">04</span><span><h2>Спина + руки</h2><p>Вертикальная и горизонтальная тяга, задняя дельта, бицепс и трицепс.</p><span class="workout-meta"><span>5 упражнений</span><span>≈ 55 мин</span></span></span></a>
+          <a class="workout-library-item" href="course.html?program=push"><span class="workout-index">05</span><span><h2>Грудь + плечи</h2><p>Жимы, разведения и последовательная работа верхней части тела.</p><span class="workout-meta"><span>5 упражнений</span><span>≈ 55 мин</span></span></span></a>
+          <a class="workout-library-item" href="course.html?program=core"><span class="workout-index">06</span><span><h2>Пресс + кор</h2><p>Сгибание, подъёмы коленей, анти-ротация, перенос и разгибание.</p><span class="workout-meta"><span>5 упражнений</span><span>≈ 45 мин</span></span></span></a>
+        </div>
+      </section>
+
+      <section class="workspace view" data-view-panel="progress" hidden>
+        <header class="section-head"><div><h1>Прогресс</h1><p>Данные сохраняются локально в этом браузере. Здесь отображаются подходы и рабочие веса, записанные в тренировке «Сильные ягодицы».</p></div><a class="section-link section-link--quiet" href="course.html?program=calendar">К полному календарю →</a></header>
+        <div class="section-panel">
+          <div class="panel-title"><strong>Текущая тренировка</strong><span>на этом устройстве</span></div>
+          <div class="progress-summary"><article><strong id="progressSets">0 / 12</strong><span>подходов записано</span></article><article><strong id="progressPercent">0%</strong><span>тренировки выполнено</span></article><article><strong id="progressExercises">0 / 5</strong><span>упражнений завершено</span></article></div>
+        </div>
+        <div class="section-panel">
+          <div class="panel-title"><strong>Последние рабочие веса</strong><span>обновляются после подхода</span></div>
+          <div class="progress-detail"><div><strong>Сохранённые ориентиры</strong><p id="progressWeightCopy">Пока вес не записан.</p><div class="weight-history" id="progressWeights"></div></div><div><strong>Как считается прогресс</strong><p>Подход учитывается после нажатия «Завершить подход». Вес остаётся ориентиром для следующего запуска курса в этом браузере.</p></div></div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="mobile-nav" aria-label="Мобильная навигация">
+      <button type="button" data-view-nav="today" aria-current="page"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z"/><path d="M9 20v-6h6v6"/></svg>Сегодня</button>
+      <button type="button" data-view-nav="program"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M7 4v6M17 4v6M5 12h14v8H5z"/></svg>Программа</button>
+      <button type="button" data-view-nav="library"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5A1.5 1.5 0 0 1 6.5 4H11v16H6.5A1.5 1.5 0 0 1 5 18.5zM19 5.5A1.5 1.5 0 0 0 17.5 4H13v16h4.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg>Библиотека</button>
+      <button type="button" data-view-nav="progress"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9m7 10V5m7 14v-7"/></svg>Прогресс</button>
+    </nav>
+  </div>
+
+  <section class="finish" id="finish" data-open="false" aria-hidden="true"><div class="finish-card"><div class="finish-mark"><svg class="icon" style="width:34px;height:34px" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></div><h2>Тренировка завершена</h2><p>Все 12 рабочих подходов сохранены на этом устройстве. Вес появится как ориентир в следующей тренировке.</p><div class="finish-stats"><div><strong id="finishTime">00:00</strong><span>время</span></div><div><strong>12</strong><span>подходов</span></div><div><strong>5</strong><span>упражнений</span></div></div><button class="primary" type="button" id="finishButton">На главную</button></div></section>
+
+  <script>
+    const exercises = [
+      {id:'hip',short:'Ягодичный мост',subtitle:'Главное силовое движение · большая ягодичная',sets:3,reps:'8–10',baseReps:8,rest:120,rir:2,weight:40,image:'assets/hip-thrust.jpg',video:'https://kinescope.io/embed/ef97650f-f867-4821-8d25-e4bdfe75f2dd',cues:['Лопатки лежат на скамье','Вверху голени близки к вертикали','Не поднимайте таз за счёт поясницы']},
+      {id:'rdl',short:'Румынская тяга',subtitle:'Тазовый шарнир · задняя поверхность бедра',sets:3,reps:'8–10',baseReps:8,rest:120,rir:2,weight:30,image:'assets/rdl-head-aligned-v2.png',cues:['Таз начинает движение назад','Гриф проходит близко к ногам','Не округляйте поясницу ради глубины']},
+      {id:'split',short:'Сплит-присед',subtitle:'Односторонняя работа · ягодицы и квадрицепс',sets:2,reps:'10 / сторона',baseReps:10,rest:90,rir:2,weight:12,image:'assets/split-squat.jpg',cues:['Стопа полностью прижата к полу','Корпус слегка наклонён вперёд','Колено идёт по линии носка']},
+      {id:'kick',short:'Разгибание бедра в блоке',subtitle:'Разгибание бедра · изоляция ягодичной',sets:2,reps:'12–15',baseReps:12,rest:60,rir:2,weight:7.5,image:'assets/kickback.jpg',cues:['Таз остаётся ровным','Движение идёт из бедра','Не раскачивайте корпус']},
+      {id:'abduction',short:'Отведение бёдер',subtitle:'Средняя ягодичная · завершение',sets:2,reps:'15–20',baseReps:15,rest:60,rir:2,weight:30,image:'assets/abduction.jpg',cues:['Сохраняйте нейтральный таз','Разводите колени подконтрольно','Не бросайте вес обратно']}
+    ];
+    const $ = (s,root=document)=>root.querySelector(s);
+    const $$ = (s,root=document)=>[...root.querySelectorAll(s)];
+    const saved = (()=>{try{return JSON.parse(localStorage.getItem('sekta-console-v2')||'{}')}catch{return {}}})();
+    const state = {started:false,exercise:0,set:0,reps:8,rir:2,completed:saved.completed||{},startedAt:null,elapsedTimer:null,restTimer:null,restRemaining:0,restTotal:0};
+    const totalSets = exercises.reduce((sum,item)=>sum+item.sets,0);
+    const countDone = ()=>Object.values(state.completed).filter(Boolean).length;
+    const exerciseDone = index=>Array.from({length:exercises[index].sets},(_,i)=>Boolean(state.completed[`${index}-${i}`])).every(Boolean);
+    const firstOpenSet = index=>Array.from({length:exercises[index].sets},(_,i)=>i).find(i=>!state.completed[`${index}-${i}`]) ?? exercises[index].sets-1;
+    const formatTime = seconds=>`${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;
+    const checkIcon = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>';
+    const viewTitles = {today:'Тренировка на сегодня',program:'Программа',library:'Библиотека тренировок',progress:'Прогресс'};
+    let currentView = 'today';
+
+    function activateView(view,updateUrl=true){
+      if(!viewTitles[view])view='today';
+      currentView=view;
+      $$('[data-view-panel]').forEach(panel=>{panel.hidden=panel.dataset.viewPanel!==view});
+      $$('[data-view-nav]').forEach(button=>{if(button.dataset.viewNav===view)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});
+      $('#modeTitle').textContent=view==='today'&&state.started?'Активная тренировка':viewTitles[view];
+      if(view==='progress')renderProgress();
+      if(updateUrl){const url=new URL(window.location.href);if(view==='today')url.searchParams.delete('view');else url.searchParams.set('view',view);history.replaceState(null,'',url.pathname+url.search+url.hash)}
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function renderProgress(){
+      const done=countDone();
+      const completedExercises=exercises.filter((_,index)=>exerciseDone(index)).length;
+      const weights=exercises.map(item=>({label:item.short,value:localStorage.getItem(`sekta-console-weight-${item.id}`)})).filter(item=>item.value);
+      $('#progressSets').textContent=`${done} / ${totalSets}`;
+      $('#progressPercent').textContent=`${Math.round(done/totalSets*100)}%`;
+      $('#progressExercises').textContent=`${completedExercises} / ${exercises.length}`;
+      $('#progressWeightCopy').textContent=weights.length?'Последние записанные значения:':'Пока вес не записан.';
+      $('#progressWeights').innerHTML=weights.map(item=>`<span>${item.label}: ${item.value} кг</span>`).join('');
+    }
+
+    function renderRoute(){
+      $('#route').innerHTML=exercises.map((item,index)=>`<button class="route-step" type="button" data-route="${index}" ${index===state.exercise?'aria-current="step"':''} data-complete="${exerciseDone(index)}"><span class="route-num">${exerciseDone(index)?'✓':index+1}</span><span class="route-copy"><strong>${item.short}</strong><span>${item.sets} × ${item.reps}</span></span></button>`).join('');
+      $$('[data-route]').forEach(button=>button.addEventListener('click',()=>{state.exercise=Number(button.dataset.route);state.set=firstOpenSet(state.exercise);stopRest();renderExercise()}));
+      const current=$('#route [aria-current="step"]');
+      if(current&&window.matchMedia('(max-width: 760px)').matches)requestAnimationFrame(()=>current.scrollIntoView({block:'nearest',inline:'center'}));
+    }
+    function renderCues(item){$('#cues').innerHTML=item.cues.map((cue,index)=>`<div class="cue ${index===2?'cue--warning':''}"><strong>${index===2?'ОШИБКА':`КЛЮЧ ${index+1}`}</strong><p>${cue}</p></div>`).join('')}
+    function renderSetTabs(){
+      const item=exercises[state.exercise];
+      $('#setTabs').innerHTML=Array.from({length:item.sets},(_,index)=>`<button class="set-tab" type="button" data-set="${index}" aria-current="${index===state.set}" data-done="${Boolean(state.completed[`${state.exercise}-${index}`])}">${state.completed[`${state.exercise}-${index}`]?'✓ ':''}${index+1} / ${item.sets}</button>`).join('');
+      $$('[data-set]').forEach(button=>button.addEventListener('click',()=>{state.set=Number(button.dataset.set);renderAction()}));
+    }
+    function renderAction(){
+      const done=Boolean(state.completed[`${state.exercise}-${state.set}`]);
+      $('#primaryAction span').textContent=!state.started?'Начать тренировку':done?'Подход записан':'Завершить подход';
+      $('#primaryAction').disabled=state.started&&done;
+      $('#primaryAction').querySelector('svg').innerHTML=state.started?'<path d="m5 12 4 4L19 6"/>':'<path d="m9 7 8 5-8 5z"/>';
+      $$('.set-tab').forEach((button,index)=>button.setAttribute('aria-current',index===state.set));
+    }
+    function renderExercise(){
+      const item=exercises[state.exercise];
+      $('#exerciseTitle').textContent=item.short;
+      $('#exerciseSubtitle').textContent=item.subtitle;
+      $('#exerciseImage').src=item.image;
+      $('#exerciseImage').alt=`Техника упражнения: ${item.short}`;
+      $('#dose').textContent=`${item.sets} подхода · ${item.reps} повторений`;
+      $('#weight').value=localStorage.getItem(`sekta-console-weight-${item.id}`)||item.weight;
+      $('#lastWeight').textContent=localStorage.getItem(`sekta-console-weight-${item.id}`)?`прошлая запись: ${localStorage.getItem(`sekta-console-weight-${item.id}`)} кг`:'прошлая запись: —';
+      state.reps=item.baseReps; state.rir=item.rir;
+      $('#reps').textContent=state.reps; $('#rir').textContent=state.rir; $('#restReadout').textContent=formatTime(item.rest);
+      $('#videoButton').style.display=item.video?'inline-flex':'none'; $('#media iframe')?.remove(); $('#media').removeAttribute('data-mode');
+      renderCues(item); renderSetTabs(); renderRoute(); renderAction(); updateProgress();
+    }
+    function updateProgress(){const done=countDone();$('#overallProgress').textContent=`${done} / ${totalSets}`;$('#saveState').textContent=done?`сохранено: ${done} из ${totalSets}`:state.started?'тренировка идёт':'готово к старту';renderProgress()}
+    function start(){
+      state.started=true; state.startedAt=Date.now(); if(currentView==='today')$('#modeTitle').textContent='Активная тренировка';
+      const next=exercises.findIndex((_,index)=>!exerciseDone(index)); if(next>=0){state.exercise=next;state.set=firstOpenSet(next)}
+      clearInterval(state.elapsedTimer); state.elapsedTimer=setInterval(()=>{$('#elapsed').textContent=formatTime(Math.floor((Date.now()-state.startedAt)/1000))},1000);
+      renderExercise();
+    }
+    function completeSet(){
+      if(!state.started){start();return}
+      const key=`${state.exercise}-${state.set}`; if(state.completed[key])return;
+      state.completed[key]=true; const item=exercises[state.exercise]; const weight=$('#weight').value;
+      if(weight)localStorage.setItem(`sekta-console-weight-${item.id}`,weight);
+      localStorage.setItem('sekta-console-v2',JSON.stringify({completed:state.completed}));
+      renderExercise();
+      if(countDone()===totalSets){finish();return}
+      startRest(item.rest);
+    }
+    function startRest(seconds){stopRest(false);state.restRemaining=seconds;state.restTotal=seconds;$('#restDock').dataset.open='true';$('#restStatus').textContent='идёт';renderRest();state.restTimer=setInterval(()=>{state.restRemaining--;renderRest();if(state.restRemaining<=0){clearInterval(state.restTimer);state.restTimer=null;$('#restStatus').textContent='готово'}},1000)}
+    function renderRest(){$('#restTime').textContent=formatTime(Math.max(0,state.restRemaining));$('#restBar').style.transform=`scaleX(${Math.max(0,state.restRemaining/state.restTotal)})`}
+    function stopRest(hide=true){clearInterval(state.restTimer);state.restTimer=null;if(hide)$('#restDock').dataset.open='false'}
+    function advance(){stopRest();const item=exercises[state.exercise];const next=Array.from({length:item.sets},(_,i)=>i).find(i=>!state.completed[`${state.exercise}-${i}`]);if(next!==undefined)state.set=next;else if(state.exercise<exercises.length-1){state.exercise++;state.set=0}renderExercise();window.scrollTo({top:0,behavior:'smooth'})}
+    function finish(){stopRest();clearInterval(state.elapsedTimer);$('#finishTime').textContent=$('#elapsed').textContent;$('#finish').dataset.open='true';$('#finish').setAttribute('aria-hidden','false')}
+    function closeFinish(){$('#finish').dataset.open='false';$('#finish').setAttribute('aria-hidden','true');state.completed={};localStorage.removeItem('sekta-console-v2');state.started=false;state.exercise=0;state.set=0;$('#elapsed').textContent='00:00';activateView('today');renderExercise()}
+
+    $('#primaryAction').addEventListener('click',completeSet);
+    $$('[data-weight]').forEach(button=>button.addEventListener('click',()=>{$('#weight').value=Math.max(0,Number($('#weight').value||0)+Number(button.dataset.weight))}));
+    $$('[data-reps]').forEach(button=>button.addEventListener('click',()=>{state.reps=Math.min(30,Math.max(1,state.reps+Number(button.dataset.reps)));$('#reps').textContent=state.reps}));
+    $$('[data-rir]').forEach(button=>button.addEventListener('click',()=>{state.rir=Math.min(5,Math.max(0,state.rir+Number(button.dataset.rir)));$('#rir').textContent=state.rir}));
+    $('#addRest').addEventListener('click',()=>{state.restRemaining+=15;state.restTotal+=15;renderRest()});
+    $('#skipRest').addEventListener('click',advance);
+    $('#safetyButton').addEventListener('click',()=>{$('#safetyCopy').dataset.open=$('#safetyCopy').dataset.open!=='true'});
+    $('#videoButton').addEventListener('click',()=>{const item=exercises[state.exercise];if(!item.video)return;const iframe=document.createElement('iframe');iframe.src=`${item.video}?autoplay=1&muted=1`;iframe.title=`Видео техники: ${item.short}`;iframe.allow='autoplay; fullscreen; picture-in-picture';iframe.allowFullscreen=true;$('#media').dataset.mode='video';$('#media').prepend(iframe)});
+    $('#finishButton').addEventListener('click',closeFinish);
+    $$('[data-view-nav]').forEach(button=>button.addEventListener('click',()=>activateView(button.dataset.viewNav)));
+    $('#topbarDate').textContent=new Intl.DateTimeFormat('ru-RU',{weekday:'long',day:'numeric',month:'long'}).format(new Date());
+    renderExercise();
+    activateView(new URL(window.location.href).searchParams.get('view')||'today',false);
+  </script>
+</body>
+</html>
