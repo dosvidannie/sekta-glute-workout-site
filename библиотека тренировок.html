@@ -186,9 +186,7 @@
     .program-timeline { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .program-week { min-height: 190px; padding: 18px; border-right: 1px solid var(--line); }
     .program-week:last-child { border-right: 0; }
-    .program-week[data-current="true"] { background: var(--forest-soft); }
     .program-week small { display: block; margin-bottom: 18px; color: var(--muted); font-size: 10px; font-weight: 820; letter-spacing: .08em; }
-    .program-week[data-current="true"] small { color: var(--forest); }
     .program-week strong { display: block; margin-bottom: 9px; font-size: 16px; }
     .program-week p { margin: 0; color: var(--muted); font-size: 12px; }
     .program-week a { display: inline-flex; margin-top: 17px; color: var(--forest); font-size: 11px; font-weight: 800; }
@@ -316,7 +314,7 @@
         <button type="button" data-view-nav="library"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5A1.5 1.5 0 0 1 6.5 4H11v16H6.5A1.5 1.5 0 0 1 5 18.5zM19 5.5A1.5 1.5 0 0 0 17.5 4H13v16h4.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg>Библиотека<span class="nav-state"></span></button>
         <button type="button" data-view-nav="progress"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19V9m7 10V5m7 14v-7"/></svg>Прогресс<span class="nav-state"></span></button>
       </nav>
-      <div class="rail-foot"><strong>Неделя 2 из 4</strong>Следующая тренировка — низ тела 360°</div>
+      <div class="rail-foot"><strong>6 готовых тренировок</strong>Выберите день в библиотеке или составьте расписание.</div>
     </aside>
 
     <main class="page">
@@ -353,20 +351,20 @@
       </section>
 
       <section class="workspace view" data-view-panel="program" hidden>
-        <header class="section-head"><div><h1>Программа на 4 недели</h1><p>Три силовые тренировки в неделю с чередованием акцентов. Открывайте нужный день в полном курсе — там есть техника, веса, таймеры и видео для части упражнений.</p></div><a class="section-link" href="course.html?program=calendar">Открыть календарь курса →</a></header>
+        <header class="section-head"><div><h1>Пример прогрессии на 4 недели</h1><p>Ниже — ориентир, как постепенно менять нагрузку, а не расписание по датам. Тренировки и частоту выбирайте в календаре полного курса.</p></div><a class="section-link" href="course.html?program=calendar">Составить расписание в календаре →</a></header>
         <div class="section-panel">
-          <div class="panel-title"><strong>Маршрут программы</strong><span>неделя 2 из 4</span></div>
+          <div class="panel-title"><strong>Как менять нагрузку</strong><span>пример без привязки к датам</span></div>
           <div class="program-timeline">
-            <article class="program-week"><small>НЕДЕЛЯ 01</small><strong>Освоение техники</strong><p>Умеренные веса, запас 3 повтора, фиксация исходных рабочих весов.</p><a href="course.html?program=glutes">Начать с ягодиц →</a></article>
-            <article class="program-week" data-current="true"><small>НЕДЕЛЯ 02 · СЕЙЧАС</small><strong>Рабочий ритм</strong><p>Запас 2 повтора, стабильный темп и три полноценные тренировки.</p><a href="course.html?program=lower">Следующая: низ 360° →</a></article>
-            <article class="program-week"><small>НЕДЕЛЯ 03</small><strong>Прогресс нагрузки</strong><p>Добавьте вес или повтор, если техника остаётся устойчивой.</p><a href="course.html?program=legs">Открыть день ног →</a></article>
-            <article class="program-week"><small>НЕДЕЛЯ 04</small><strong>Закрепление</strong><p>Повторите лучшие рабочие веса без выхода за заданный RIR.</p><a href="course.html?program=calendar">Смотреть расписание →</a></article>
+            <article class="program-week"><small>НЕДЕЛЯ 01</small><strong>Освоение техники</strong><p>Умеренные веса, запас 3 повтора, фиксация исходных рабочих весов.</p><a href="course.html?program=glutes">Пример: ягодицы →</a></article>
+            <article class="program-week"><small>НЕДЕЛЯ 02</small><strong>Рабочий ритм</strong><p>Запас 2 повтора и стабильный темп.</p><a href="course.html?program=lower">Пример: низ 360° →</a></article>
+            <article class="program-week"><small>НЕДЕЛЯ 03</small><strong>Прогресс нагрузки</strong><p>Добавьте вес или повтор, если техника остаётся устойчивой.</p><a href="course.html?program=legs">Пример: день ног →</a></article>
+            <article class="program-week"><small>НЕДЕЛЯ 04</small><strong>Закрепление</strong><p>Повторите лучшие рабочие веса без выхода за заданный RIR.</p><a href="course.html?program=calendar">Составить расписание →</a></article>
           </div>
         </div>
       </section>
 
       <section class="workspace view" data-view-panel="library" hidden>
-        <header class="section-head"><div><h1>Библиотека тренировок</h1><p>Все шесть тренировок курса снова доступны. В каждой — полный набор упражнений и подсказки по технике; для части упражнений есть встроенные видео.</p></div><a class="section-link" href="course.html?program=library">Открыть библиотеку упражнений →</a></header>
+        <header class="section-head"><div><h1>Библиотека тренировок</h1><p>Каждая карточка открывает нужную тренировку в полном курсе. Там есть упражнения и подсказки по технике; для части упражнений — видео.</p></div><a class="section-link" href="course.html?program=library">Открыть библиотеку упражнений →</a></header>
         <div class="section-panel workout-library-grid">
           <a class="workout-library-item" href="course.html?program=glutes"><span class="workout-index">01</span><span><h2>Сильные ягодицы</h2><p>Ягодичный мост, тяга, сплит-присед, разгибание бедра в блоке и отведение.</p><span class="workout-meta"><span>5 упражнений</span><span>≈ 60 мин</span></span></span></a>
           <a class="workout-library-item" href="course.html?program=legs"><span class="workout-index">02</span><span><h2>День ног</h2><p>Квадрицепс, задняя поверхность бедра и икроножные.</p><span class="workout-meta"><span>5 упражнений</span><span>≈ 65 мин</span></span></span></a>
